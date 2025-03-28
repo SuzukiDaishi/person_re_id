@@ -9,9 +9,13 @@ from torchvision import transforms  # type: ignore
 
 
 def is_same_person(
-    model: Any,
     img1: Image.Image,
     img2: Image.Image,
+    model = torchreid.models.build_model(
+        name="osnet_x1_0",
+        num_classes=1000,  # 利用するデータセットに合わせて変更
+        pretrained=True,
+    ),
     transform: transforms.Compose = transforms.Compose(
         [
             transforms.Resize((256, 128)),
@@ -23,6 +27,7 @@ def is_same_person(
     """
     画像1と画像2が同一人物かどうかを判定する関数
     """
+    model.eval()
     img1_tensor = transform(img1).unsqueeze(0)
     img2_tensor = transform(img2).unsqueeze(0)
     with torch.inference_mode():
@@ -55,20 +60,12 @@ if __name__ == "__main__":
     print(f"画像1: {person_1}")
     print(f"画像2: {person_2}")
 
-    # 事前学習済み OSNet (osnet_x1_0) の読み込み
-    model = torchreid.models.build_model(
-        name="osnet_x1_0",
-        num_classes=1000,  # 利用するデータセットに合わせて変更
-        pretrained=True,
-    )
-    model.eval()
-
     # 画像の読み込み
     img1 = Image.open(person_1).convert("RGB")
     img2 = Image.open(person_2).convert("RGB")
 
     # 同一人物かどうかを判定
-    cos_sim = is_same_person(model, img1, img2)
+    cos_sim = is_same_person(img1, img2)
     print(f"cosine similarity: {cos_sim:.4f}")
     # 閾値を設定して判定
     if cos_sim > 0.7:
