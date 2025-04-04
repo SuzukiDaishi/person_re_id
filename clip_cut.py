@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 入力動画ファイルのパス
-video_path = 'dataset_video/思い出の交差点 short film プロローグ【短編映画】.mp4'
+video_path = 'dataset_youtube/思い出の交差点 short film プロローグ【短編映画】.mp4'
 # 出力動画ファイルのテンプレート（セグメントごとに番号付き）
 output_template = 'segment_{}.mp4'
 # 差分の閾値
